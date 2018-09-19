@@ -1,0 +1,22 @@
+<package>
+  <name>omni_teleop</name>
+  <version>2.3.11</version>
+  <description>Provides teleoperation for omni-directional bases using joysticks.</description>
+  <maintainer email="georg.bartels@cs.uni-bremen.de">Georg Bartels</maintainer>
+  <maintainer email="amaldo@cs.uni-bremen.de">Alexis Maldonado</maintainer>
+  <license>BSD</license>
+  
+  <author email="mwise@willowgarage.com">Melonee Wise</author>
+  <author email="georg.bartels@cs.uni-bremen.de">Georg Bartels</author>
+  <author email="amaldo@cs.uni-bremen.de">Alexis Maldonado</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>joy</build_depend>
+  
+  <run_depend>roscpp</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>joy</run_depend>
+</package>

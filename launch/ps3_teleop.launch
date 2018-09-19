@@ -1,0 +1,25 @@
+<launch>
+
+  <!-- PS3 Joystick driver -->
+  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+    <param name="autorepeat_rate" value="20" />
+    <param name="coalesce_interval" value="0.01" />
+  </node>
+
+  <!--- Omni-directional Teleop (publishes Twists) -->
+  <node pkg="omni_teleop" type="omni_joy" name="teleop_joystick">
+    <param name="scale_angular" value="0.6"/>
+    <param name="scale_linear" value="0.5"/>
+    <param name="axis_deadman" value="10"/>
+    <param name="axis_headctrl" value="8"/>
+    <param name="axis_linear_x" value="3"/>
+    <param name="axis_linear_y" value="2"/>
+    <param name="axis_angular" value="0"/>
+    <param name="axis_head_pan" value="2"/>
+    <param name="axis_head_tilt" value="2"/>
+    <remap from="/cmd_vel" to="/base/cmd_vel"/>
+  </node>
+
+</launch>
