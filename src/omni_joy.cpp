@@ -90,12 +90,12 @@ void TurtlebotTeleop::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 { 
   geometry_msgs::TwistStamped vel;
   vel.header.frame_id = "/base_footprint";
+  vel.header.stamp = joy->header.stamp;
   vel.twist.angular.z = a_scale_*joy->axes[angular_];
   vel.twist.linear.x = l_scale_*joy->axes[linear_x];
   vel.twist.linear.y = l_scale_*joy->axes[linear_y];
   last_published_ = vel;
   deadman_pressed_ = joy->buttons[deadman_axis_] && (not joy->buttons[headctrl_axis_]);
-
 }
 
 void TurtlebotTeleop::publish()
@@ -105,10 +105,13 @@ void TurtlebotTeleop::publish()
   if (deadman_pressed_)
   {
     vel_pub_.publish(last_published_);
+    zero_twist_published_ = false;
   }
   else if(!deadman_pressed_ && !zero_twist_published_)
   {
-    vel_pub_.publish(*new geometry_msgs::Twist());
+    last_published_.twist = geometry_msgs::Twist();
+    last_published_.header.stamp = ros::Time::now();
+    vel_pub_.publish(last_published_);
     zero_twist_published_=true;
   }
 }
