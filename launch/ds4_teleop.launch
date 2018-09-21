@@ -10,7 +10,7 @@
     <param name="coalesce_interval" value="0.01" />
   </node>
   
-  <-- Read joy messages and publish twist messages
+  <!-- Read joy messages and publish twist messages -->
   <node pkg="omni_teleop" type="omni_joy" name="teleop_joystick" />
   <!-- TODO: set parameters of axes, and potentially remap topics -->
 
