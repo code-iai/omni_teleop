@@ -48,13 +48,14 @@ private:
 
   int linear_x, linear_y, angular_, deadman_axis_, headctrl_axis_;
   double l_scale_, a_scale_;
-  ros::Publisher vel_pub_;
+  ros::Publisher vel_pub_, vel_s_pub_;
   ros::Subscriber joy_sub_;
 
   geometry_msgs::TwistStamped last_published_;
   boost::mutex publish_mutex_;
   bool deadman_pressed_;
   bool zero_twist_published_;
+  bool stamped_interface_selected_;
   ros::Timer timer_;
 
 };
@@ -67,7 +68,8 @@ TurtlebotTeleop::TurtlebotTeleop():
   deadman_axis_(4),
   headctrl_axis_(8),
   l_scale_(0.3),
-  a_scale_(0.9)
+  a_scale_(0.9),
+  stamped_interface_selected_(true)
 {
   ph_.param("axis_linear_x", linear_x, linear_x);
   ph_.param("axis_linear_y", linear_y, linear_y);
@@ -76,11 +78,16 @@ TurtlebotTeleop::TurtlebotTeleop():
   ph_.param("axis_headctrl", headctrl_axis_, headctrl_axis_);
   ph_.param("scale_angular", a_scale_, a_scale_);
   ph_.param("scale_linear", l_scale_, l_scale_);
+  ph_.param("stamped_interface", stamped_interface_selected_, stamped_interface_selected_);
 
   deadman_pressed_ = false;
   zero_twist_published_ = false;
 
-  vel_pub_ = nh_.advertise<geometry_msgs::TwistStamped>("cmd_vel", 1);
+  if (stamped_interface_selected_)
+    vel_s_pub_ = nh_.advertise<geometry_msgs::TwistStamped>("cmd_vel", 1);
+  else
+    vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+
   joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TurtlebotTeleop::joyCallback, this);
 
   timer_ = nh_.createTimer(ros::Duration(0.01), boost::bind(&TurtlebotTeleop::publish, this));
@@ -104,14 +111,20 @@ void TurtlebotTeleop::publish()
 
   if (deadman_pressed_)
   {
-    vel_pub_.publish(last_published_);
+    if (stamped_interface_selected_)
+      vel_s_pub_.publish(last_published_);
+    else
+      vel_pub_.publish(last_published_.twist);
     zero_twist_published_ = false;
   }
   else if(!deadman_pressed_ && !zero_twist_published_)
   {
     last_published_.twist = geometry_msgs::Twist();
     last_published_.header.stamp = ros::Time::now();
-    vel_pub_.publish(last_published_);
+    if (stamped_interface_selected_)
+      vel_s_pub_.publish(last_published_);
+    else
+      vel_pub_.publish(last_published_.twist);
     zero_twist_published_=true;
   }
 }
