@@ -11,7 +11,8 @@
   </node>
   
   <!-- Read joy messages and publish twist messages -->
-  <node pkg="omni_teleop" type="omni_joy" name="teleop_joystick" />
-  <!-- TODO: set parameters of axes, and potentially remap topics -->
+  <node pkg="omni_teleop" type="omni_joy" name="teleop_joystick" >
+    <param name="stamped_interface" value="false" />
+  </node>
 
 </launch>
