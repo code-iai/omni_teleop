@@ -1,11 +1,11 @@
 <launch>
-  <arg name="dev" default="/dev/input/js0" />
+  <arg name="dev" default="/dev/input/js1" />
 
   <!-- DS4 driver -->
   <node pkg="omni_teleop" type="ds4driver.sh" name="ds4driver" output="screen"/>
 
   <!-- Read input and publish joy messages -->
-  <node pkg="joy" type="joy_node" name="ps3_joy" output="screen" >
+  <node pkg="joy" type="joy_node" name="ds4_joy" output="screen" >
     <param name="dev" type="string" value="$(arg dev)" />
     <param name="deadzone" value="0.12" />
     <param name="autorepeat_rate" value="20" />
@@ -14,7 +14,8 @@
   
   <!-- Read joy messages and publish twist messages -->
   <node pkg="omni_teleop" type="omni_joy" name="teleop_joystick" >
-    <param name="stamped_interface" value="false" />
+    <param name="stamped_interface" value="true" />
+    <remap from="/cmd_vel" to="/base/cmd_vel" />
   </node>
 
 </launch>
