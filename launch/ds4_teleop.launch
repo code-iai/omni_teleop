@@ -1,8 +1,5 @@
 <launch>
-  <arg name="dev" default="/dev/input/js1" />
-
-  <!-- DS4 driver -->
-  <node pkg="omni_teleop" type="ds4driver.sh" name="ds4driver" output="screen"/>
+  <arg name="dev" default="/dev/input/js0" />
 
   <!-- Read input and publish joy messages -->
   <node pkg="joy" type="joy_node" name="ds4_joy" output="screen" >
@@ -15,6 +12,7 @@
   <!-- Read joy messages and publish twist messages -->
   <node pkg="omni_teleop" type="omni_joy" name="teleop_joystick" >
     <param name="stamped_interface" value="true" />
+    <param name="axis_angular" value="3" /> <!-- for the kernel js interface -->
     <remap from="/cmd_vel" to="/base/cmd_vel" />
   </node>
 

@@ -19,5 +19,4 @@
   <run_depend>roscpp</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>joy</run_depend>
-  <run_depend>ds4drv-pip</run_depend>
 </package>
